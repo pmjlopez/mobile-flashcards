@@ -7,10 +7,12 @@ import { Constants } from 'expo'
 import { Provider } from "react-redux"
 import { createMaterialTopTabNavigator, createStackNavigator } from 'react-navigation'
 import reducer from './reducers'
+import middleware from './middleware'
 import DeckAdd from "./components/DeckAdd"
 import DeckList from "./components/DeckList"
 import Deck from "./components/Deck"
 import CardAdd from "./components/CardAdd"
+import Quiz from "./components/Quiz"
 
 function UdaciStatusBar ({ backgroundColor, ...props }) {
     return (
@@ -84,13 +86,23 @@ const MainNavigator = createStackNavigator(
                 },
             },
         },
+        Quiz: {
+            screen: Quiz,
+            navigationOptions: {
+                headerTintColor: white,
+                headerStyle: {
+                    backgroundColor: purple,
+                },
+            },
+        },
     },
 )
 
 export default class App extends React.Component {
     render() {
+        const store = createStore(reducer, middleware)
         return (
-            <Provider store={createStore(reducer)}>
+            <Provider store={store}>
                 <View style={{ flex: 1}}>
                     <UdaciStatusBar backgroundColor={purple} barStyle='light-content'/>
                     <MainNavigator/>

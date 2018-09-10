@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, Text } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import { getDeckList } from "../utils/helpers"
-import { receiveEntries } from "../actions"
+import { receiveEntries } from "../actions/decks"
 import { AppLoading } from 'expo'
 import DeckPreview from "./DeckPreview"
 import Deck from './Deck'
@@ -12,38 +12,56 @@ class DeckList extends Component {
         ready: false
     }
     viewDeck = (deck) => {
-        this.props.navigation.navigate('Deck', { deck: deck })
+        this.props.navigation.navigate('Deck', { id: deck.id, title: deck.title })
     }
     componentDidMount () {
         const { dispatch } = this.props
         getDeckList()
-            .then((entries) => dispatch(receiveEntries(entries)))
+            .then((decks) => dispatch(receiveEntries(decks)))
             .then(() => this.setState(() => ({
                 ready: true,
             })))
     }
     render() {
-        const { entries, navigation } = this.props
+        const { decks } = this.props
         const { ready } = this.state
 
         if (ready === false) {
             return <AppLoading/>
         }
 
+        const keys = Object.keys(decks)
+
+        if (!keys.length > 0) {
+            return (
+                <View>
+                    <Text style={styles.noDeckText}>No decks to show. Please add deck.</Text>
+                </View>
+            )
+        }
+
         return (
             <View>
-                {Object.keys(entries).map((entry) => (
-                    <DeckPreview key={entry} deck={entries[entry]} handleClick={this.viewDeck}/>
+                {keys.map((entry) => (
+                    <DeckPreview key={entry} deck={decks[entry]} handleClick={this.viewDeck}/>
                 ))}
             </View>
         )
     }
 }
 
-function mapStateToProps (entries) {
+function mapStateToProps ({ decks }) {
     return {
-        entries
+        decks,
     }
 }
 
 export default connect(mapStateToProps)(DeckList)
+
+const styles = StyleSheet.create({
+    noDeckText: {
+        fontSize: 20,
+        padding: 30,
+        textAlign: 'center',
+    },
+})
