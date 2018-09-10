@@ -1,22 +1,48 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import { addEntry } from "../actions"
-import { gray, purple } from "../utils/colors"
+import { gray } from "../utils/colors"
+import { handleRemoveDeck } from "../actions/decks"
+import Quiz from "./Quiz"
+import {NavigationActions} from "react-navigation";
 
 class Deck extends Component {
     static navigationOptions = ({ navigation }) => {
-        const { deck } = navigation.state.params
+        const { title } = navigation.state.params
         return {
-            title: deck.title,
+            title: title,
         }
     }
     handleAddCard = () => {
         const { deck, navigation } = this.props
-        navigation.navigate('CardAdd', { deck })
+        navigation.navigate('CardAdd', { id: deck.id })
+    }
+    handleStartQuiz = () => {
+        const { deck, navigation } = this.props
+        navigation.navigate('Quiz', { id: deck.id })
+    }
+    handleRemoveDeck = () => {
+        const { dispatch, deck } = this.props
+        dispatch(handleRemoveDeck(deck.id))
+        this.toList()
+    }
+    toList = () => {
+        const { backKey } = this.props
+        this.props.navigation.dispatch(NavigationActions.back({
+            key: backKey
+        }))
     }
     render() {
         const { deck } = this.props
+        if (!deck) {
+            return (
+                <View>
+                    <Text>
+                        The deck does not exist.
+                    </Text>
+                </View>
+            )
+        }
         const qLength = deck.questions.length
         return (
             <View style={styles.container}>
@@ -28,10 +54,10 @@ class Deck extends Component {
                     <TouchableOpacity onPress={this.handleAddCard}>
                         <Text style={styles.button}>Add Card</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={this.handleStartQuiz}>
                         <Text style={styles.button}>Start Quiz</Text>
                     </TouchableOpacity>
-                    <Text style={styles.resetButton}>Delete Deck</Text>
+                    <Text onPress={this.handleRemoveDeck} style={styles.resetButton}>Delete Deck</Text>
                 </View>
             </View>
         )
@@ -75,22 +101,13 @@ const styles = StyleSheet.create({
     },
 })
 
-function mapStateToProps (state, { navigation }) {
-    const { deck } = navigation.state.params
+function mapStateToProps ({ decks }, { navigation }) {
+    const { id } = navigation.state.params
+    const deck = decks[id]
     return {
         deck,
+        backKey: navigation.state.key,
     }
 }
 
-function mapDispatchToProps (dispatch, { navigation }) {
-    const { deck } = navigation.state.params
-
-    return {
-        remove: () => dispatch(addEntry({
-            [deck.id]: null,
-        })),
-        goBack: () => navigation.goBack(),
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Deck)
+export default connect(mapStateToProps)(Deck)
