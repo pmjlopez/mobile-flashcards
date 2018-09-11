@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View, Text, StyleSheet } from 'react-native'
-import { getDeckList } from "../utils/helpers"
+import { getDeckList } from "../utils/api"
 import { receiveEntries } from "../actions/decks"
 import { AppLoading } from 'expo'
 import DeckPreview from "./DeckPreview"

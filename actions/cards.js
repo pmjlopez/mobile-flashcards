@@ -11,7 +11,7 @@ function addCard (id, card) {
 }
 
 export function handleAddCard (id, card) {
-    return (dispatch, getState) => {
+    return (dispatch) => {
         return addCardToDeck(id, card)
             .then(() => dispatch(addCard(id, card)))
     }
