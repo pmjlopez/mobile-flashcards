@@ -7,7 +7,6 @@ import {
     Platform,
     TextInput,
 } from 'react-native'
-import { clearLocalNotification, setLocalNotification } from '../utils/helpers'
 import { connect } from 'react-redux'
 import { gray, purple, white } from "../utils/colors"
 import { NavigationActions } from 'react-navigation'
@@ -37,8 +36,6 @@ class DeckAdd extends Component {
             title: '',
         }))
 
-        clearLocalNotification()
-            .then(setLocalNotification)
         this.toHome()
     }
     toHome = () => {

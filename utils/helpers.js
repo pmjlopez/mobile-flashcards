@@ -1,28 +1,7 @@
 import { AsyncStorage } from 'react-native'
 import { Notifications, Permissions } from 'expo'
-import {DECKS_STORAGE_KEY, formatDeck } from "./_decks"
 
 const NOTIFICATION_KEY = 'UdaciCards:notifications'
-
-export function getDeckList () {
-    return AsyncStorage.getItem(DECKS_STORAGE_KEY)
-        .then((results) => {
-            const data = JSON.parse(results)
-            return data
-        })
-        .catch((e) => console.log('Error retrieving Deck List: ', e))
-}
-
-export function getDailyReminderValue () {
-    return {
-        today: ":) Don't forget to study today!"
-    }
-}
-
-export function clearLocalNotification () {
-    return AsyncStorage.removeItem(NOTIFICATION_KEY)
-        .then(Notifications.cancelAllScheduledNotificationsAsync)
-}
 
 function createNotification () {
     return {
@@ -63,9 +42,11 @@ export function setLocalNotification () {
                                 }
                             )
 
-                            AsyncStorage.setItem(NOTIFICATION_KEY, JSON.stringify(true))
+                            AsyncStorage.setItem(NOTIFICATION_KEY, JSON.stringify(tomorrow))
                         }
                     })
+            } else {
+                console.log(`Notification already set for ${data}.`)
             }
         })
 }
