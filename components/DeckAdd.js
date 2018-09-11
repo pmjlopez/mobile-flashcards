@@ -8,12 +8,11 @@ import {
     TextInput,
 } from 'react-native'
 import { clearLocalNotification, setLocalNotification } from '../utils/helpers'
-import { submitEntry } from "../utils/api"
 import { connect } from 'react-redux'
-import { addEntry } from "../actions"
 import { gray, purple, white } from "../utils/colors"
 import { NavigationActions } from 'react-navigation'
 import { formatDeck } from "../utils/_decks"
+import {handleAddDeck} from "../actions/decks";
 
 function SubmitBtn ({ onPress }) {
     return (
@@ -31,20 +30,16 @@ class DeckAdd extends Component {
     }
     submit = () => {
         const entry = formatDeck(this.state.title)
-        const key = entry.id
 
-        this.props.dispatch(addEntry({
-            [key]: entry
-        }))
+        this.props.dispatch(handleAddDeck(entry))
 
         this.setState(() => ({
             title: '',
         }))
 
-        this.toHome()
-        submitEntry({ key, entry })
         clearLocalNotification()
             .then(setLocalNotification)
+        this.toHome()
     }
     toHome = () => {
         this.props.navigation.dispatch(NavigationActions.back({
@@ -54,13 +49,17 @@ class DeckAdd extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text></Text>
-                <TextInput
-                    style={styles.textInput}
-                    onChangeText={(text) => this.setState(() => ({ title: text}))}
-                    value={this.state.title}
-                />
-                <SubmitBtn onPress={this.submit}/>
+                <View>
+                    <Text style={styles.title}>Add Deck</Text>
+                </View>
+                <View>
+                    <TextInput
+                        style={styles.textInput}
+                        onChangeText={(text) => this.setState(() => ({ title: text}))}
+                        value={this.state.title}
+                    />
+                    <SubmitBtn onPress={this.submit}/>
+                </View>
             </View>
         )
     }
@@ -73,6 +72,12 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 20,
         backgroundColor: white,
+        alignContent: 'space-around',
+    },
+    title: {
+        fontSize: 20,
+        textAlign: 'center',
+        padding: 30,
     },
     row: {
         flexDirection: 'row',
@@ -83,6 +88,8 @@ const styles = StyleSheet.create({
         height: 40,
         borderColor: gray,
         borderWidth: 1,
+        marginBottom: 30,
+        padding: 10,
     },
     iosSubmitBtn: {
         backgroundColor: purple,
