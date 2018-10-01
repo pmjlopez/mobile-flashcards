@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { gray } from "../utils/colors"
 import { handleRemoveDeck } from "../actions/decks"
-import Quiz from "./Quiz"
 import {NavigationActions} from "react-navigation";
 
 class Deck extends Component {

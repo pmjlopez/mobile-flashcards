@@ -8,11 +8,7 @@ import { Provider } from "react-redux"
 import { createMaterialTopTabNavigator, createStackNavigator } from 'react-navigation'
 import reducer from './reducers'
 import middleware from './middleware'
-import DeckAdd from "./components/DeckAdd"
-import DeckList from "./components/DeckList"
-import Deck from "./components/Deck"
-import CardAdd from "./components/CardAdd"
-import Quiz from "./components/Quiz"
+import { DeckAdd, DeckList, Deck, CardAdd, Quiz } from './components'
 import { setLocalNotification } from "./utils/helpers"
 
 function UdaciStatusBar ({ backgroundColor, ...props }) {

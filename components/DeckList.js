@@ -4,8 +4,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import { getDeckList } from "../utils/api"
 import { receiveEntries } from "../actions/decks"
 import { AppLoading } from 'expo'
-import DeckPreview from "./DeckPreview"
-import Deck from './Deck'
+import { DeckPreview, Deck } from '../components'
 
 class DeckList extends Component {
     state = {
